@@ -10,6 +10,7 @@ import * as Realm from "realm-web";
 import {AppId, setCollections} from "../../config/variables";
 import {ActionsFn} from "../../redux/actions/Actions";
 import TextOrOptions from "./components/TextOrOptions";
+import RespostasDAO from "../../DAOs/RespostasDAO";
 
 const RespostaPage = () => {
 
@@ -38,7 +39,8 @@ const RespostaPage = () => {
                 const mongodb = app.currentUser.mongoClient("mongodb-atlas");
                 dispatch(ActionsFn.setDb(setCollections(mongodb)))
                 PesquisaDAO.setDb(setCollections(mongodb));
-                PerguntasDAO.setDb(setCollections(mongodb))
+                RespostasDAO.setDb(setCollections(mongodb));
+                PerguntasDAO.setDb(setCollections(mongodb));
                 const pesquisaId = window.location.search.match(/id=(\w+)/g)[0].split("=")[1];
 
                 PesquisaDAO.findAll().then(pesquisas => {
@@ -58,14 +60,14 @@ const RespostaPage = () => {
         }
     }, []);
 
-    const submitToDatabase = (resposta) => {
+    const submitToDatabase = async (resposta) => {
         const data = {
             data: new Date(),
             //@ts-ignore
             pesquisa: pesquisa._id,
             respostas: resposta,
         }
-        console.log(data);
+        await RespostasDAO.insert(data);
     }
 
     const [optionSelected, setOptionSelected] = React.useState(null);
@@ -73,11 +75,15 @@ const RespostaPage = () => {
     React.useEffect(() => {
         setOptionSelected(null);
         setTextTyped('');
+        if (perguntaAtual === "final") {
+            submitToDatabase(resposta).then(() => {
+                console.log('something working on');
+            })
+        }
     }, [perguntaAtual])
 
     const getPergunta = (perguntas, id_pergunta) => {
         if (id_pergunta === "final") {
-            submitToDatabase(resposta);
             return "final";
         }
         return perguntas.filter(pergunta => (pergunta._id.toString() === id_pergunta.toString()))[0];

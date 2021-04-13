@@ -8,6 +8,7 @@ import * as Realm from 'realm-web'
 import PesquisaDAO from "../src/DAOs/PesquisaDAO";
 import {ActionsFn} from "../src/redux/actions/Actions";
 import PerguntasDAO from '../src/DAOs/PerguntasDAO'
+import RespostasDAO from "../src/DAOs/RespostasDAO";
 
 export default function Home() {
 
@@ -20,9 +21,10 @@ export default function Home() {
         try {
             app.logIn(credentials).then(user => {
               const mongodb = app.currentUser.mongoClient("mongodb-atlas");
-              dispatch(ActionsFn.setDb(setCollections(mongodb)))
+              dispatch(ActionsFn.setDb(setCollections(mongodb)));
+              RespostasDAO.setDb(setCollections(mongodb));
               PesquisaDAO.setDb(setCollections(mongodb));
-              PerguntasDAO.setDb(setCollections(mongodb))
+              PerguntasDAO.setDb(setCollections(mongodb));
               console.log("logged in");
             });
         } catch (e) {

@@ -15,6 +15,7 @@ import PerguntasDAO from "../../DAOs/PerguntasDAO";
 import {useDispatch, useSelector} from "react-redux";
 import {ActionsFn} from "../../redux/actions/Actions";
 import {useRouter} from "next/router";
+import RespostasDAO from "../../DAOs/RespostasDAO";
 
 const IndexPage = () => {
 
@@ -25,7 +26,7 @@ const IndexPage = () => {
         nome: '',
     })
     const [loading, setLoading]  = React.useState(false);
-    const { pesquisas, db } = useSelector(state => state.general);
+    const { respostas, pesquisas, db } = useSelector(state => state.general);
 
     const [logged, setLogged] = React.useState(false);
 
@@ -54,12 +55,12 @@ const IndexPage = () => {
 
     React.useEffect(() => {
         if (db) {
-            PesquisaDAO.findAll().then(res => {
-                dispatch(ActionsFn.setPesquisas(res));
-                PerguntasDAO.findAll().then(res1 => {
-                    dispatch(ActionsFn.setPerguntas(res1))
+            Promise.all([PesquisaDAO.findAll(), PerguntasDAO.findAll(), RespostasDAO.findAll()])
+                .then(result => {
+                    dispatch(ActionsFn.setPesquisas(result[0]));
+                    dispatch(ActionsFn.setPerguntas(result[1]));
+                    dispatch(ActionsFn.setRespostas(result[2]));
                 })
-            });
         }
         console.log(db)
     }, [db]);
@@ -138,7 +139,7 @@ const IndexPage = () => {
                         pesquisas.map((pesquisa, index) => (
                             <TableRow key={index}>
                                 <Table.Cell>{pesquisa.nome}</Table.Cell>
-                                <Table.Cell>{0}</Table.Cell>
+                                <Table.Cell>{respostas.filter(resposta => resposta.pesquisa.toString() === pesquisa._id.toString()).length}</Table.Cell>
                                 <Table.Cell>
                                     <Button onClick={() => {
                                         router.push({ pathname: '/pesquisa/', query: {id: pesquisa._id.toString()}});
