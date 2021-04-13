@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-    Button,
+    Button, Card, CardContent,
     Container,
     Divider,
-    Form,
+    Form, FormField, FormInput,
     Header,
     Icon,
     Label,
@@ -27,7 +27,7 @@ const IndexPage = () => {
     const [loading, setLoading]  = React.useState(false);
     const { pesquisas, db } = useSelector(state => state.general);
 
-
+    const [logged, setLogged] = React.useState(false);
 
     const onSubmit = async () => {
         if (formPesquisa.nome === "") {
@@ -69,6 +69,28 @@ const IndexPage = () => {
         setErrorName(false);
     }, [modalOpen])
 
+    if (!logged) {
+        return (<div style={{position: 'absolute', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+            <Header as={'h2'}>Informe a Senha</Header>
+            <Card>
+                <CardContent>
+                    <Form onSubmit={(e) => {
+                        e.preventDefault();
+                        const form = e.target;
+                        if (form.senha.value === "Prettiu$1") {
+                            setLogged(true);
+                        }
+                    }}>
+                        <FormField>
+                            <label>Senha:</label>
+                            <input type={'password'} name={'senha'} />
+                        </FormField>
+                        <Button floated={'right'}>Confirmar</Button>
+                    </Form>
+                </CardContent>
+            </Card>
+        </div>)
+    }
     return (
     <div style={{paddingTop: 35}}>
         <Container>
