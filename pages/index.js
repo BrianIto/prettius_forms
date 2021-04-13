@@ -1,65 +1,38 @@
 import Head from 'next/head'
+import React from 'react'
+import IndexPage from '../src/pages/IndexPage/IndexPage'
 import styles from '../styles/Home.module.css'
+import {setCollections, AppId} from '../src/config/variables'
+import {useSelector, useDispatch} from 'react-redux';
+import * as Realm from 'realm-web'
+import PesquisaDAO from "../src/DAOs/PesquisaDAO";
+import {ActionsFn} from "../src/redux/actions/Actions";
+import PerguntasDAO from '../src/DAOs/PerguntasDAO'
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    const dispatch = useDispatch()
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  React.useEffect(() => {
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        const app = new Realm.App({ id: AppId });
+        const credentials = Realm.Credentials.emailPassword("brian.oliveira100@gmail.com", "123456");
+        try {
+            app.logIn(credentials).then(user => {
+              const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+              dispatch(ActionsFn.setDb(setCollections(mongodb)))
+              PesquisaDAO.setDb(setCollections(mongodb));
+              PerguntasDAO.setDb(setCollections(mongodb))
+              console.log("logged in");
+            });
+        } catch (e) {
+            console.log("login failed");
+            throw e;
+        }
+  }, [])
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+    React.useEffect(() => {
+        console.log(window.location.href);
+    })
+  return (<IndexPage />)
 }
