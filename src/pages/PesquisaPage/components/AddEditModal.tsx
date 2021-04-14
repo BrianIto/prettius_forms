@@ -291,7 +291,6 @@ const AddEditModal = ({modalOpen, setModalOpen, selectedPesquisa, selectedPergun
                             await PerguntasDAO.edit(selectedPergunta._id, finalPergunta);
                         } else {
                             //@ts-ignore
-                            delete finalPergunta._id;
                             console.log(finalPergunta);
                             await PerguntasDAO.insert(finalPergunta);
                         }

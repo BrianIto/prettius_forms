@@ -48,7 +48,6 @@ const Pesquisa = () => {
         if (!modalOpen) {
             dispatch(ActionsFn.selectPergunta({
                 titulo: '',
-                _id: '',
             }));
             setEditing(false);
         }
