@@ -298,7 +298,7 @@ const AddEditModal = ({modalOpen, setModalOpen, selectedPesquisa, selectedPergun
                         dispatch(ActionsFn.setPerguntas(perguntas));
                         setModalOpen(false);
                     }}
-                    color={'orange'}>Adicionar</Button>
+                    color={'orange'}>{editing ? 'Editar' : 'Adicionar'}</Button>
             </Modal.Actions>
         </Modal>
     );
