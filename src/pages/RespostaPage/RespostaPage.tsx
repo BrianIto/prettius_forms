@@ -91,9 +91,20 @@ const RespostaPage = () => {
 
         return (
             <div>
+
                 {loadingPage ? <Dimmer active={loadingPage}>
                         <Header as={'h2'} color={'orange'}>Carregando...</Header>
                 </Dimmer> : <></>}
+                <div className={styles.animation}>
+                    <Lottie animationData={blob} autoplay={true} loop={true}  />
+                </div>
+                <div className={styles.animation1}>
+                    <Lottie animationData={blob} autoplay={true} loop={true}  />
+                </div><div className={styles.animation2}>
+                <Lottie animationData={blob} autoplay={true} loop={true}  />
+            </div><div className={styles.animation3}>
+                <Lottie animationData={blob} autoplay={true} loop={true}  />
+            </div>
                 <div className={styles.bg}>
                     {perguntaAtual === "final" ?
                         <div>
@@ -141,17 +152,6 @@ const RespostaPage = () => {
                         </div>
                         }
                 </div>
-
-                        <div className={styles.animation}>
-                        <Lottie animationData={blob} autoplay={true} loop={true}  />
-                        </div>
-                        <div className={styles.animation1}>
-                        <Lottie animationData={blob} autoplay={true} loop={true}  />
-                        </div><div className={styles.animation2}>
-                        <Lottie animationData={blob} autoplay={true} loop={true}  />
-                        </div><div className={styles.animation3}>
-                        <Lottie animationData={blob} autoplay={true} loop={true}  />
-                        </div>
             </div>
         )
 }
