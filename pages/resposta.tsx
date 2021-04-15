@@ -8,7 +8,7 @@ const Resposta = (props) => {
     return (
         <div>
             <Head>
-                <title>Questionário de Viabilidade</title>
+                <title>Pesquisa de Público</title>
             </Head>
             <RespostaPage />
         </div>
