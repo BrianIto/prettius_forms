@@ -11,16 +11,22 @@ const TextOrOptions = ({ tipo, opcoes, onClickOption, onChangeText } :
 
 
     const [selected, setSelected] = React.useState('');
+    const [text, setText] = React.useState('');
 
     React.useEffect(() => {
         setSelected('');
+        setText('');
     }, [tipo, opcoes]);
 
 
     if (tipo === "texto") {
         return (
             <Input
-                onChange={(e, {value}) => onChangeText(value)}
+                onChange={(e, {value}) => {
+                    onChangeText(value)
+                    setText(value);
+                }}
+                value={text}
                 className={'width100'}
                 fluid
                 placeholder={"Digite sua resposta aqui..."}/>
